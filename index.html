@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advaria Studio - Panel de Control</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f13; color: #fff; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: #181820; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    h2, h3 { color: #8a2be2; margin-top: 0; }
+    .section-title { border-bottom: 1px solid #333; padding-bottom: 5px; margin-top: 25px; color: #a259ff; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85em; color: #bbb; }
+    input, select { width: 100%; padding: 10px; margin-top: 5px; background: #252530; border: 1px solid #333; border-radius: 6px; color: #fff; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #8a2be2; border: none; border-radius: 6px; color: #fff; font-weight: bold; margin-top: 25px; cursor: pointer; transition: 0.2s; }
+    button:hover { background: #7a1bd2; }
+    .status { margin-top: 15px; text-align: center; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>⚙️ Panel de Configuración - Advaria Studio</h2>
+
+  <label for="guildSelect">Selecciona o introduce la ID del Servidor:</label>
+  <select id="guildSelect" onchange="seleccionarServidor(this.value)">
+    <option value="">-- Seleccionar Servidor --</option>
+    <option value="1411514775128637484">Advaria Studio OFICIAL (1411514775128637484)</option>
+    <option value="1518699561541963869">Proyectos server (1518699561541963869)</option>
+    <option value="1412194193543270573">Advaria TEST (1412194193543270573)</option>
+  </select>
+
+  <label for="guildId">ID del Servidor (Manual):</label>
+  <input type="text" id="guildId" placeholder="Ej: 1411514775128637484">
+
+  <button onclick="cargarConfiguracion()">📂 Cargar Datos del Servidor</button>
+
+  <div class="section-title">📌 Canales de Sistema y Logs</div>
+  <div class="grid">
+    <div>
+      <label for="sugerenciasChannel">Canal de Sugerencias:</label>
+      <input type="text" id="sugerenciasChannel">
+    </div>
+    <div>
+      <label for="logsChannel">Canal de Logs Generales:</label>
+      <input type="text" id="logsChannel">
+    </div>
+    <div>
+      <label for="logssanciones">Canal Logs de Sanciones:</label>
+      <input type="text" id="logssanciones">
+    </div>
+    <div>
+      <label for="logsTorneos">Canal Logs de Torneos:</label>
+      <input type="text" id="logsTorneos">
+    </div>
+  </div>
+
+  <div class="section-title">🎫 Sistema de Tickets</div>
+  <div class="grid">
+    <div>
+      <label for="categoriaTickets">Categoría Tickets Generales:</label>
+      <input type="text" id="categoriaTickets">
+    </div>
+    <div>
+      <label for="categoriaEventos">Categoría Tickets Eventos:</label>
+      <input type="text" id="categoriaEventos">
+    </div>
+  </div>
+
+  <div class="section-title">🏆 Sistema de Torneos</div>
+  <div class="grid">
+    <div>
+      <label for="categoriaTorneos">Categoría de Torneos:</label>
+      <input type="text" id="categoriaTorneos">
+    </div>
+    <div>
+      <label for="creadorTorneosRole">Rol Creador de Torneos:</label>
+      <input type="text" id="creadorTorneosRole">
+    </div>
+    <div>
+      <label for="inscritoTorneoRole">Rol Inscrito a Torneos:</label>
+      <input type="text" id="inscritoTorneoRole">
+    </div>
+  </div>
+
+  <div class="section-title">🛡️ Moderación y Roles</div>
+  <div class="grid">
+    <div>
+      <label for="muteRole">Rol Silenciado (Mute Role):</label>
+      <input type="text" id="muteRole">
+    </div>
+    <div>
+      <label for="rolMiembro">Rol de Miembro (Aceptar Reglas):</label>
+      <input type="text" id="rolMiembro">
+    </div>
+  </div>
+
+  <label for="staffRoles">Roles de Staff (IDs separadas por coma):</label>
+  <input type="text" id="staffRoles" placeholder="ID1, ID2, ID3">
+
+  <button onclick="guardarConfiguracion()">💾 Guardar Configuración</button>
+
+  <div id="status" class="status"></div>
+</div>
+
+<script>
+  const API_URL = "http://78.154.103.29:9024";
+
+  function seleccionarServidor(val) {
+    if (val) document.getElementById('guildId').value = val;
+  }
+
+  async function cargarConfiguracion() {
+    const guildId = document.getElementById('guildId').value.trim();
+    if (!guildId) return alert("Por favor introduce una ID de servidor.");
+
+    document.getElementById('status').innerText = "⏳ Cargando desde Wispbyte...";
+
+    try {
+      const res = await fetch(`${API_URL}/api/config/${guildId}`);
+      const data = await res.json();
+
+      document.getElementById('sugerenciasChannel').value = data.sugerenciasChannel || '';
+      document.getElementById('logsChannel').value = data.logsChannel || '';
+      document.getElementById('logssanciones').value = data.logssanciones || '';
+      document.getElementById('logsTorneos').value = data.logsTorneos || '';
+      document.getElementById('categoriaTickets').value = data.categoriaTickets || '';
+      document.getElementById('categoriaEventos').value = data.categoriaEventos || '';
+      document.getElementById('categoriaTorneos').value = data.categoriaTorneos || '';
+      document.getElementById('creadorTorneosRole').value = data.creadorTorneosRole || '';
+      document.getElementById('inscritoTorneoRole').value = data.inscritoTorneoRole || '';
+      document.getElementById('muteRole').value = data.muteRole || '';
+      document.getElementById('rolMiembro').value = data.rolMiembro || '';
+      document.getElementById('staffRoles').value = (data.staffRoles || []).join(', ');
+
+      document.getElementById('status').style.color = "#00ff00";
+      document.getElementById('status').innerText = "✅ Configuración cargada con éxito.";
+    } catch (err) {
+      document.getElementById('status').style.color = "#ff0000";
+      document.getElementById('status').innerText = "❌ Error al conectar con el API de Wispbyte.";
+    }
+  }
+
+  async function guardarConfiguracion() {
+    const guildId = document.getElementById('guildId').value.trim();
+    if (!guildId) return alert("Por favor introduce una ID de servidor.");
+
+    const payload = {
+      sugerenciasChannel: document.getElementById('sugerenciasChannel').value.trim(),
+      logsChannel: document.getElementById('logsChannel').value.trim(),
+      logssanciones: document.getElementById('logssanciones').value.trim(),
+      logsTorneos: document.getElementById('logsTorneos').value.trim(),
+      categoriaTickets: document.getElementById('categoriaTickets').value.trim(),
+      categoriaEventos: document.getElementById('categoriaEventos').value.trim(),
+      categoriaTorneos: document.getElementById('categoriaTorneos').value.trim(),
+      creadorTorneosRole: document.getElementById('creadorTorneosRole').value.trim(),
+      inscritoTorneoRole: document.getElementById('inscritoTorneoRole').value.trim(),
+      muteRole: document.getElementById('muteRole').value.trim(),
+      rolMiembro: document.getElementById('rolMiembro').value.trim(),
+      staffRoles: document.getElementById('staffRoles').value.split(',').map(s => s.trim()).filter(Boolean)
+    };
+
+    document.getElementById('status').style.color = "#ffff00";
+    document.getElementById('status').innerText = "⏳ Guardando cambios...";
+
+    try {
+      const res = await fetch(`${API_URL}/api/config/${guildId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+
+      document.getElementById('status').style.color = "#00ff00";
+      document.getElementById('status').innerText = "✅ " + result.message;
+    } catch (err) {
+      document.getElementById('status').style.color = "#ff0000";
+      document.getElementById('status').innerText = "❌ Error al guardar los datos en Wispbyte.";
+    }
+  }
+</script>
+
+</body>
+</html>
