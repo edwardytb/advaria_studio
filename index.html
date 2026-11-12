@@ -224,7 +224,6 @@
     </div>
 
     <!-- Moderación y Roles -->
-    <!-- Moderación y Roles -->
     <div class="section-title">🛡️ Moderación y Roles</div>
     <div class="form-row">
       <div class="form-group">
@@ -233,19 +232,19 @@
       </div>
       <div class="form-group">
         <label for="rolCreator">Rol de Creador / Partner (Advaria Creators):</label>
-        <input type="text" id="rolCreator" placeholder="ID del rol de creador">
+        <input type="text" id="rolCreator" placeholder="ID del rol para creadores">
       </div>
     </div>
-    
+
+    <div class="form-row">
       <div class="form-group">
         <label for="rolMiembro">Rol de Miembro (Aceptar Reglas):</label>
         <input type="text" id="rolMiembro" placeholder="ID del rol">
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="rolesStaff">Roles de Staff (IDs separadas por coma):</label>
-      <input type="text" id="rolesStaff" placeholder="Ej: 1411570374017286184, 1411570723583168532">
+      <div class="form-group">
+        <label for="rolesStaff">Roles de Staff (IDs separadas por coma):</label>
+        <input type="text" id="rolesStaff" placeholder="Ej: 1411570374017286184">
+      </div>
     </div>
 
     <button class="btn" onclick="guardarConfiguracion()">💾 Guardar Configuración</button>
@@ -254,7 +253,6 @@
   </div>
 
   <script>
-    // URL Base segura HTTPS conectada con tu subdominio Wispbyte
     const API_BASE_URL = 'https://advaria.wisp.uno';
 
     function actualizarGuildIdManual() {
@@ -283,7 +281,7 @@
 
         const config = await response.json();
 
-        // Rellenar campos de la UI
+        // Rellenar campos de la UI de forma segura
         document.getElementById('canalSugerencias').value = config.canalSugerencias || '';
         document.getElementById('canalLogs').value = config.canalLogs || '';
         document.getElementById('canalLogsSanciones').value = config.canalLogsSanciones || '';
@@ -294,6 +292,7 @@
         document.getElementById('rolCreadorTorneos').value = config.rolCreadorTorneos || '';
         document.getElementById('rolInscritoTorneos').value = config.rolInscritoTorneos || '';
         document.getElementById('rolMute').value = config.rolMute || '';
+        document.getElementById('rolCreator').value = config.rolCreator || '';
         document.getElementById('rolMiembro').value = config.rolMiembro || '';
         document.getElementById('rolesStaff').value = Array.isArray(config.rolesStaff) ? config.rolesStaff.join(', ') : (config.rolesStaff || '');
 
@@ -327,6 +326,7 @@
         rolCreadorTorneos: document.getElementById('rolCreadorTorneos').value.trim(),
         rolInscritoTorneos: document.getElementById('rolInscritoTorneos').value.trim(),
         rolMute: document.getElementById('rolMute').value.trim(),
+        rolCreator: document.getElementById('rolCreator').value.trim(),
         rolMiembro: document.getElementById('rolMiembro').value.trim(),
         rolesStaff: document.getElementById('rolesStaff').value.trim()
       };
@@ -358,7 +358,6 @@
       }
     }
 
-    // Carga automática al iniciar la página
     window.addEventListener('DOMContentLoaded', () => {
       cargarConfiguracion();
     });
