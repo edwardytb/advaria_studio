@@ -163,7 +163,7 @@
 
     <div class="form-group">
       <label for="guildIdInput">ID del Servidor (Manual):</label>
-      <input type="text" id="guildIdInput" value="1411514775128637484" placeholder="Ingresa la ID del servidor">
+      <input type="text" id="guildIdInput" placeholder="Ingresa la ID del servidor">
     </div>
 
     <button class="btn btn-secondary" onclick="cargarConfiguracion()">📂 Cargar Datos del Servidor</button>
@@ -232,7 +232,7 @@
       </div>
       <div class="form-group">
         <label for="rolCreator">Rol de Creador / Partner (Advaria Creators):</label>
-        <input type="text" id="rolCreator" placeholder="ID del rol para creadores">
+        <input type="text" id="rolCreator" placeholder="ID del rol de creador">
       </div>
     </div>
 
@@ -255,10 +255,27 @@
   <script>
     const API_BASE_URL = 'https://advaria.wisp.uno';
 
+    // Carga automática leyendo la ID que envía el comando /setup en la URL (ej: index.html?guild=ID)
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const guildIdFromURL = urlParams.get('guild');
+
+      if (guildIdFromURL) {
+        document.getElementById('guildIdInput').value = guildIdFromURL;
+        const selectGuild = document.getElementById('guildSelect');
+        if (selectGuild) {
+          selectGuild.value = guildIdFromURL;
+        }
+      }
+
+      cargarConfiguracion();
+    });
+
     function actualizarGuildIdManual() {
       const select = document.getElementById('guildSelect');
       if (select.value) {
         document.getElementById('guildIdInput').value = select.value;
+        cargarConfiguracion();
       }
     }
 
@@ -281,7 +298,7 @@
 
         const config = await response.json();
 
-        // Rellenar campos de la UI de forma segura
+        // Rellenar campos de la interfaz
         document.getElementById('canalSugerencias').value = config.canalSugerencias || '';
         document.getElementById('canalLogs').value = config.canalLogs || '';
         document.getElementById('canalLogsSanciones').value = config.canalLogsSanciones || '';
@@ -357,10 +374,6 @@
         statusMsg.innerText = '❌ Error al guardar los datos en Wispbyte.';
       }
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      cargarConfiguracion();
-    });
   </script>
 </body>
 </html>
