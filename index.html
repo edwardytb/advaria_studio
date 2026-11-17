@@ -181,7 +181,7 @@
       </div>
     </div>
 
-    <!-- NUEVO CAMPO: Canal de Planificación -->
+    <!-- Canal de Planificación -->
     <div class="form-row">
       <div class="form-group">
         <label for="canalPlanificacion">Canal de Planificación de Videos:</label>
@@ -266,7 +266,6 @@
   <script>
     const API_BASE_URL = 'https://advaria.wisp.uno';
 
-    // Carga automática leyendo la ID que envía el comando /setup en la URL (ej: index.html?guild=ID)
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const guildIdFromURL = urlParams.get('guild');
@@ -309,9 +308,10 @@
 
         const config = await response.json();
 
-        // Rellenar campos de la interfaz
+        // Rellenar campos de la interfaz incluyendo el canal de planificación
         document.getElementById('canalSugerencias').value = config.canalSugerencias || '';
         document.getElementById('canalLogs').value = config.canalLogs || '';
+        document.getElementById('canalPlanificacion').value = config.canalPlanificacion || '';
         document.getElementById('canalLogsSanciones').value = config.canalLogsSanciones || '';
         document.getElementById('canalLogsTorneos').value = config.canalLogsTorneos || '';
         document.getElementById('catTicketsGen').value = config.catTicketsGen || '';
@@ -346,6 +346,7 @@
       const payload = {
         canalSugerencias: document.getElementById('canalSugerencias').value.trim(),
         canalLogs: document.getElementById('canalLogs').value.trim(),
+        canalPlanificacion: document.getElementById('canalPlanificacion').value.trim(),
         canalLogsSanciones: document.getElementById('canalLogsSanciones').value.trim(),
         canalLogsTorneos: document.getElementById('canalLogsTorneos').value.trim(),
         catTicketsGen: document.getElementById('catTicketsGen').value.trim(),
