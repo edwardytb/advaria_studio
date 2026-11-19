@@ -181,14 +181,15 @@
       </div>
     </div>
 
-    <!-- Canal de Planificación -->
+    <!-- Canal de Planificación y Canal de Plantillas -->
     <div class="form-row">
       <div class="form-group">
         <label for="canalPlanificacion">Canal de Planificación de Videos:</label>
         <input type="text" id="canalPlanificacion" placeholder="ID del canal de planificación">
       </div>
       <div class="form-group">
-        <!-- Espacio libre para mantener la simetría de 2 columnas -->
+        <label for="canalPlantillas">Canal Logs de Plantillas:</label>
+        <input type="text" id="canalPlantillas" placeholder="ID del canal privado de plantillas">
       </div>
     </div>
 
@@ -308,10 +309,10 @@
 
         const config = await response.json();
 
-        // Rellenar campos de la interfaz incluyendo el canal de planificación
         document.getElementById('canalSugerencias').value = config.canalSugerencias || '';
         document.getElementById('canalLogs').value = config.canalLogs || '';
         document.getElementById('canalPlanificacion').value = config.canalPlanificacion || '';
+        document.getElementById('canalPlantillas').value = config.canalPlantillas || '';
         document.getElementById('canalLogsSanciones').value = config.canalLogsSanciones || '';
         document.getElementById('canalLogsTorneos').value = config.canalLogsTorneos || '';
         document.getElementById('catTicketsGen').value = config.catTicketsGen || '';
@@ -347,6 +348,7 @@
         canalSugerencias: document.getElementById('canalSugerencias').value.trim(),
         canalLogs: document.getElementById('canalLogs').value.trim(),
         canalPlanificacion: document.getElementById('canalPlanificacion').value.trim(),
+        canalPlantillas: document.getElementById('canalPlantillas').value.trim(),
         canalLogsSanciones: document.getElementById('canalLogsSanciones').value.trim(),
         canalLogsTorneos: document.getElementById('canalLogsTorneos').value.trim(),
         catTicketsGen: document.getElementById('catTicketsGen').value.trim(),
