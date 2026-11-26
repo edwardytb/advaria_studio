@@ -265,146 +265,129 @@
   </div>
 
   <script>
-  // ⚠️ IMPORTANTE: Reemplaza esta URL por la nueva que te dé la consola al reiniciar el bot
-  const API_BASE_URL = 'https://essentials-denied-unwrap-printers.trycloudflare.com';
+    const API_BASE_URL = 'https://advaria.wisp.uno';
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const guildIdFromURL = urlParams.get('guild');
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const guildIdFromURL = urlParams.get('guild');
 
-    if (guildIdFromURL) {
-      document.getElementById('guildIdInput').value = guildIdFromURL;
-      const selectGuild = document.getElementById('guildSelect');
-      if (selectGuild) {
-        selectGuild.value = guildIdFromURL;
+      if (guildIdFromURL) {
+        document.getElementById('guildIdInput').value = guildIdFromURL;
+        const selectGuild = document.getElementById('guildSelect');
+        if (selectGuild) {
+          selectGuild.value = guildIdFromURL;
+        }
       }
-    }
 
-    cargarConfiguracion();
-  });
-
-  function actualizarGuildIdManual() {
-    const select = document.getElementById('guildSelect');
-    if (select && select.value) {
-      document.getElementById('guildIdInput').value = select.value;
       cargarConfiguracion();
-    }
-  }
+    });
 
-  async function cargarConfiguracion() {
-    const guildId = document.getElementById('guildIdInput').value.trim();
-    const statusMsg = document.getElementById('statusMessage');
-
-    if (!guildId) {
-      statusMsg.className = 'error';
-      statusMsg.innerText = '❌ Por favor, introduce una ID de servidor válida.';
-      return;
+    function actualizarGuildIdManual() {
+      const select = document.getElementById('guildSelect');
+      if (select.value) {
+        document.getElementById('guildIdInput').value = select.value;
+        cargarConfiguracion();
+      }
     }
 
-    statusMsg.className = '';
-    statusMsg.innerText = '⏳ Cargando datos desde el servidor...';
+    async function cargarConfiguracion() {
+      const guildId = document.getElementById('guildIdInput').value.trim();
+      const statusMsg = document.getElementById('statusMessage');
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`, {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-store'
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
+      if (!guildId) {
+        statusMsg.className = 'error';
+        statusMsg.innerText = '❌ Por favor, introduce una ID de servidor válida.';
+        return;
       }
 
-      const config = await response.json();
+      statusMsg.className = '';
+      statusMsg.innerText = '⏳ Cargando datos desde Wispbyte...';
 
-      document.getElementById('canalSugerencias').value = config.canalSugerencias || '';
-      document.getElementById('canalLogs').value = config.canalLogs || '';
-      document.getElementById('canalPlanificacion').value = config.canalPlanificacion || '';
-      document.getElementById('canalPlantillas').value = config.canalPlantillas || '';
-      document.getElementById('canalLogsSanciones').value = config.canalLogsSanciones || '';
-      document.getElementById('canalLogsTorneos').value = config.canalLogsTorneos || '';
-      document.getElementById('catTicketsGen').value = config.catTicketsGen || '';
-      document.getElementById('catTicketsEv').value = config.catTicketsEv || '';
-      document.getElementById('catTorneos').value = config.catTorneos || '';
-      document.getElementById('rolCreadorTorneos').value = config.rolCreadorTorneos || '';
-      document.getElementById('rolInscritoTorneos').value = config.rolInscritoTorneos || '';
-      document.getElementById('rolMute').value = config.rolMute || '';
-      document.getElementById('rolCreator').value = config.rolCreator || '';
-      document.getElementById('rolMiembro').value = config.rolMiembro || '';
-      document.getElementById('rolesStaff').value = Array.isArray(config.rolesStaff)
-        ? config.rolesStaff.join(', ')
-        : (config.rolesStaff || '');
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`);
+        if (!response.ok) throw new Error('Error al consultar el servidor');
 
-      statusMsg.className = 'success';
-      statusMsg.innerText = '✅ Configuración cargada correctamente.';
-    } catch (error) {
-      console.error('Error al cargar:', error);
-      statusMsg.className = 'error';
-      statusMsg.innerText = '❌ Error al cargar los datos. Verifica que el bot esté encendido y la URL del túnel sea la actual.';
-    }
-  }
+        const config = await response.json();
 
-  async function guardarConfiguracion() {
-    const guildId = document.getElementById('guildIdInput').value.trim();
-    const statusMsg = document.getElementById('statusMessage');
+        document.getElementById('canalSugerencias').value = config.canalSugerencias || '';
+        document.getElementById('canalLogs').value = config.canalLogs || '';
+        document.getElementById('canalPlanificacion').value = config.canalPlanificacion || '';
+        document.getElementById('canalPlantillas').value = config.canalPlantillas || '';
+        document.getElementById('canalLogsSanciones').value = config.canalLogsSanciones || '';
+        document.getElementById('canalLogsTorneos').value = config.canalLogsTorneos || '';
+        document.getElementById('catTicketsGen').value = config.catTicketsGen || '';
+        document.getElementById('catTicketsEv').value = config.catTicketsEv || '';
+        document.getElementById('catTorneos').value = config.catTorneos || '';
+        document.getElementById('rolCreadorTorneos').value = config.rolCreadorTorneos || '';
+        document.getElementById('rolInscritoTorneos').value = config.rolInscritoTorneos || '';
+        document.getElementById('rolMute').value = config.rolMute || '';
+        document.getElementById('rolCreator').value = config.rolCreator || '';
+        document.getElementById('rolMiembro').value = config.rolMiembro || '';
+        document.getElementById('rolesStaff').value = Array.isArray(config.rolesStaff) ? config.rolesStaff.join(', ') : (config.rolesStaff || '');
 
-    if (!guildId) {
-      statusMsg.className = 'error';
-      statusMsg.innerText = '❌ Por favor, introduce una ID de servidor válida.';
-      return;
-    }
-
-    const payload = {
-      canalSugerencias: document.getElementById('canalSugerencias').value.trim(),
-      canalLogs: document.getElementById('canalLogs').value.trim(),
-      canalPlanificacion: document.getElementById('canalPlanificacion').value.trim(),
-      canalPlantillas: document.getElementById('canalPlantillas').value.trim(),
-      canalLogsSanciones: document.getElementById('canalLogsSanciones').value.trim(),
-      canalLogsTorneos: document.getElementById('canalLogsTorneos').value.trim(),
-      catTicketsGen: document.getElementById('catTicketsGen').value.trim(),
-      catTicketsEv: document.getElementById('catTicketsEv').value.trim(),
-      catTorneos: document.getElementById('catTorneos').value.trim(),
-      rolCreadorTorneos: document.getElementById('rolCreadorTorneos').value.trim(),
-      rolInscritoTorneos: document.getElementById('rolInscritoTorneos').value.trim(),
-      rolMute: document.getElementById('rolMute').value.trim(),
-      rolCreator: document.getElementById('rolCreator').value.trim(),
-      rolMiembro: document.getElementById('rolMiembro').value.trim(),
-      rolesStaff: document.getElementById('rolesStaff').value.trim()
-    };
-
-    statusMsg.className = '';
-    statusMsg.innerText = '⏳ Guardando cambios...';
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
         statusMsg.className = 'success';
-        statusMsg.innerText = '✅ Configuración guardada con éxito en el servidor.';
-      } else {
-        throw new Error(result.message || 'Error al guardar');
+        statusMsg.innerText = '✅ Configuración cargada correctamente.';
+      } catch (error) {
+        console.error(error);
+        statusMsg.className = 'error';
+        statusMsg.innerText = '❌ Error al cargar los datos desde Wispbyte.';
       }
-    } catch (error) {
-      console.error('Error al guardar:', error);
-      statusMsg.className = 'error';
-      statusMsg.innerText = '❌ Error al guardar los datos en el servidor.';
     }
-  }
-</script>
 
+    async function guardarConfiguracion() {
+      const guildId = document.getElementById('guildIdInput').value.trim();
+      const statusMsg = document.getElementById('statusMessage');
 
+      if (!guildId) {
+        statusMsg.className = 'error';
+        statusMsg.innerText = '❌ Por favor, introduce una ID de servidor válida.';
+        return;
+      }
+
+      const payload = {
+        canalSugerencias: document.getElementById('canalSugerencias').value.trim(),
+        canalLogs: document.getElementById('canalLogs').value.trim(),
+        canalPlanificacion: document.getElementById('canalPlanificacion').value.trim(),
+        canalPlantillas: document.getElementById('canalPlantillas').value.trim(),
+        canalLogsSanciones: document.getElementById('canalLogsSanciones').value.trim(),
+        canalLogsTorneos: document.getElementById('canalLogsTorneos').value.trim(),
+        catTicketsGen: document.getElementById('catTicketsGen').value.trim(),
+        catTicketsEv: document.getElementById('catTicketsEv').value.trim(),
+        catTorneos: document.getElementById('catTorneos').value.trim(),
+        rolCreadorTorneos: document.getElementById('rolCreadorTorneos').value.trim(),
+        rolInscritoTorneos: document.getElementById('rolInscritoTorneos').value.trim(),
+        rolMute: document.getElementById('rolMute').value.trim(),
+        rolCreator: document.getElementById('rolCreator').value.trim(),
+        rolMiembro: document.getElementById('rolMiembro').value.trim(),
+        rolesStaff: document.getElementById('rolesStaff').value.trim()
+      };
+
+      statusMsg.className = '';
+      statusMsg.innerText = '⏳ Guardando cambios...';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          statusMsg.className = 'success';
+          statusMsg.innerText = '✅ Configuración guardada con éxito en Wispbyte.';
+        } else {
+          throw new Error(result.message || 'Error al guardar');
+        }
+      } catch (error) {
+        console.error(error);
+        statusMsg.className = 'error';
+        statusMsg.innerText = '❌ Error al guardar los datos en Wispbyte.';
+      }
+    }
+  </script>
 </body>
 </html>
