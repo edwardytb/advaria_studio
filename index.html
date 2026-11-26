@@ -265,7 +265,8 @@
   </div>
 
   <script>
-    const API_BASE_URL = 'https://advaria.wisp.uno';
+    // ⚠️ Cambia esta URL por la dirección nueva de tu API (túnel HTTPS, dominio o http://51.161.118.23:25582)
+    const API_BASE_URL = 'http://51.161.118.23:25582';
 
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -284,7 +285,7 @@
 
     function actualizarGuildIdManual() {
       const select = document.getElementById('guildSelect');
-      if (select.value) {
+      if (select && select.value) {
         document.getElementById('guildIdInput').value = select.value;
         cargarConfiguracion();
       }
@@ -301,11 +302,18 @@
       }
 
       statusMsg.className = '';
-      statusMsg.innerText = '⏳ Cargando datos desde Wispbyte...';
+      statusMsg.innerText = '⏳ Cargando datos desde el servidor...';
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`);
-        if (!response.ok) throw new Error('Error al consultar el servidor');
+        const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`, {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-store'
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
 
         const config = await response.json();
 
@@ -323,14 +331,16 @@
         document.getElementById('rolMute').value = config.rolMute || '';
         document.getElementById('rolCreator').value = config.rolCreator || '';
         document.getElementById('rolMiembro').value = config.rolMiembro || '';
-        document.getElementById('rolesStaff').value = Array.isArray(config.rolesStaff) ? config.rolesStaff.join(', ') : (config.rolesStaff || '');
+        document.getElementById('rolesStaff').value = Array.isArray(config.rolesStaff)
+          ? config.rolesStaff.join(', ')
+          : (config.rolesStaff || '');
 
         statusMsg.className = 'success';
         statusMsg.innerText = '✅ Configuración cargada correctamente.';
       } catch (error) {
-        console.error(error);
+        console.error('Error al cargar:', error);
         statusMsg.className = 'error';
-        statusMsg.innerText = '❌ Error al cargar los datos desde Wispbyte.';
+        statusMsg.innerText = '❌ Error al cargar los datos. Verifica que el bot esté encendido, la URL sea correcta y no haya bloqueo HTTPS/HTTP.';
       }
     }
 
@@ -368,26 +378,32 @@
       try {
         const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`, {
           method: 'POST',
+          mode: 'cors',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         });
 
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+
         const result = await response.json();
 
         if (result.success) {
           statusMsg.className = 'success';
-          statusMsg.innerText = '✅ Configuración guardada con éxito en Wispbyte.';
+          statusMsg.innerText = '✅ Configuración guardada con éxito en el servidor.';
         } else {
           throw new Error(result.message || 'Error al guardar');
         }
       } catch (error) {
-        console.error(error);
+        console.error('Error al guardar:', error);
         statusMsg.className = 'error';
-        statusMsg.innerText = '❌ Error al guardar los datos en Wispbyte.';
+        statusMsg.innerText = '❌ Error al guardar los datos en el servidor.';
       }
     }
   </script>
+
 </body>
 </html>
