@@ -265,8 +265,9 @@
   </div>
 
   <script>
-    // ⚠️ Cambia esta URL por la dirección nueva de tu API (túnel HTTPS, dominio o http://51.161.118.23:25582)
-    const API_BASE_URL = 'http://51.161.118.23:25582';
+    // ⚠️ IMPORTANTE: Como el panel está en HTTPS (GitHub Pages), coloca aquí una URL HTTPS
+    // (por ejemplo tu nuevo túnel Cloudflare apuntando a http://51.161.118.23:25582 o tu subdominio con SSL).
+    const API_BASE_URL = 'https://TU-NUEVO-TUNEL-O-DOMINIO-HTTPS';
 
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -340,7 +341,7 @@
       } catch (error) {
         console.error('Error al cargar:', error);
         statusMsg.className = 'error';
-        statusMsg.innerText = '❌ Error al cargar los datos. Verifica que el bot esté encendido, la URL sea correcta y no haya bloqueo HTTPS/HTTP.';
+        statusMsg.innerText = '❌ Error al cargar los datos. Verifica que el túnel/dominio HTTPS esté activo y apunte al puerto 25582.';
       }
     }
 
