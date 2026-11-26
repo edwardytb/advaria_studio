@@ -265,7 +265,6 @@
   </div>
 
   <script>
-    //const API_BASE_URL = 'https://advaria.wisp.uno';
     const API_BASE_URL = 'http://51.161.118.23:25582';
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -302,7 +301,7 @@
       }
 
       statusMsg.className = '';
-      statusMsg.innerText = '⏳ Cargando datos desde Wispbyte...';
+      statusMsg.innerText = '⏳ Cargando datos desde el servidor...';
 
       try {
         const response = await fetch(`${API_BASE_URL}/api/config/${guildId}`);
@@ -331,7 +330,7 @@
       } catch (error) {
         console.error(error);
         statusMsg.className = 'error';
-        statusMsg.innerText = '❌ Error al cargar los datos desde Wispbyte.';
+        statusMsg.innerText = '❌ Error al cargar los datos desde el servidor.';
       }
     }
 
@@ -379,16 +378,17 @@
 
         if (result.success) {
           statusMsg.className = 'success';
-          statusMsg.innerText = '✅ Configuración guardada con éxito en Wispbyte.';
+          statusMsg.innerText = '✅ Configuración guardada con éxito en el servidor.';
         } else {
           throw new Error(result.message || 'Error al guardar');
         }
       } catch (error) {
         console.error(error);
         statusMsg.className = 'error';
-        statusMsg.innerText = '❌ Error al guardar los datos en Wispbyte.';
+        statusMsg.innerText = '❌ Error al guardar los datos en el servidor.';
       }
     }
   </script>
+
 </body>
 </html>
